@@ -13,7 +13,7 @@ func setupRouter() (*gin.Engine, error) {
 	})
 
 	ginEngine.GET("/hello", func(c *gin.Context) {
-		c.String(http.StatusOK, "world v1")
+		c.String(http.StatusOK, "world v2")
 	})
 
 	return ginEngine, nil
