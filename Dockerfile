@@ -1,20 +1,19 @@
-FROM golang:latest AS builder
-WORKDIR /workspace
-ENV GO111MODULE=on \
-    GOPROXY=https://goproxy.cn,direct
+FROM golang:latest as mod
+LABEL stage=mod
+ENV GOPROXY https://goproxy.cn
+WORKDIR /usr/src/app/
 
-# cache deps before building and copying source so that we don't need to re-download as much
-# and so that source changes don't invalidate our downloaded layer
-COPY go.mod go.mod
-COPY go.sum go.sum
+COPY go.mod ./
+COPY go.sum ./
 RUN go mod download
 
-COPY .. .
-RUN go build -o main
+FROM mod as builder
+LABEL stage=intermediate
+COPY ./ ./
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ./bin/app -tags static -ldflags '-s -w' ./main.go
 
-FROM alpine:3.12
-COPY --from=builder /workspace /main
-RUN chmod 777 /main
-ENV TZ=Asia/Shanghai
-EXPOSE 8000
-ENTRYPOINT ["/main"]
+FROM scratch
+WORKDIR /usr/src/app/
+COPY --from=builder /usr/src/app/bin/app ./
+EXPOSE 80
+CMD ["./app"]

@@ -25,7 +25,7 @@ func main() {
 		panic(err)
 	}
 
-	err = ginEngine.Run(fmt.Sprintf(":%d", 8000))
+	err = ginEngine.Run(fmt.Sprintf(":%d", 80))
 
 	if err != nil {
 		panic(err)
