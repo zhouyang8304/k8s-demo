@@ -14,7 +14,7 @@ spec:
         app: myapp
     spec:
       containers:
-      - image: registry.cn-shanghai.aliyuncs.com/public-namespace/myapp:v1
+      - image: registry.cn-hangzhou.aliyuncs.com/go-zhou8304-project/api:v1
         name: myapp
         ports:
         - containerPort: 80
